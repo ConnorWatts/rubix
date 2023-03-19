@@ -1,4 +1,8 @@
-from .config_parser import args
+import sys, os
+
+sys.path.append(os.path.abspath("."))
+
+from rubix.config.config_parser import args
 from pydantic import BaseModel
 from strictyaml import YAML, load
 from typing import Dict, List, Optional, Sequence
@@ -6,22 +10,28 @@ import yaml
 from pathlib import Path
 
 ROOT = Path.cwd().resolve()
-CONFIG_FILE_PATH = ROOT / "rubix/rubix/config.yml"
+CONFIG_FILE_PATH = ROOT / "rubix/config.yml"
+# /home/cwatts/rubix/rubix/config.yml
 
 
 class CubeConfig(BaseModel):
     """Cube config object."""
+
     cube_dim: int
     num_moves_reset: int
 
 
 class NetworkConfig(BaseModel):
     """Network config object."""
+
     ...
 
 
-class ModelConfig(BaseModel):
+class AgentConfig(BaseModel):
     """Model config object."""
+
+    seed: int
+
     ...
 
 
@@ -30,7 +40,7 @@ class Config(BaseModel):
 
     cube_config: CubeConfig
     network_config: NetworkConfig
-    model_config: ModelConfig
+    agent_config: AgentConfig
 
 
 def get_config_file_path() -> Path:
@@ -61,7 +71,7 @@ def create_and_validate_config() -> Config:
     _config = Config(
         cube_config=CubeConfig(**parsed_config),
         network_config=NetworkConfig(**parsed_config),
-        model_config=ModelConfig(**parsed_config)
+        agent_config=AgentConfig(**parsed_config),
     )
     return _config
 
@@ -69,5 +79,4 @@ def create_and_validate_config() -> Config:
 config = create_and_validate_config()
 
 if __name__ == "__main__":
-
     ...
