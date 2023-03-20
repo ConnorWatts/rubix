@@ -31,6 +31,7 @@ class AgentConfig(BaseModel):
     """Model config object."""
 
     seed: int
+    agent: str
 
     ...
 
